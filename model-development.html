@@ -32,7 +32,7 @@
 							<li><a href="about.html">About Me</a></li>
 						</ul>
 						<ul class="icons">
-							<li><a href="#" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							<li><a href="https://www.linkedin.com/in/mason-flannery/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
 							<li><a href="https://github.com/ddotsam" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
 						</ul>
 					</nav>
@@ -78,7 +78,7 @@
 									<li><b>Tournament Type:</b> A categorical feature indicating the type of tournament (e.g., Major/Division 1, Division 2, Qualifier). 
 										This feature was encoded using dummy variables to capture its effects in the models.</li>
 								</ul>
-								Each of the quantitative features were scaled according do their mean and standard deviation. 
+								Each of the quantitative features were normalized according to their mean and standard deviation. 
 								Upon further consideration, these features make sense considering that the Elo is a measure of the skill of each team, and the GPM is a measure of how the team gains advantages.
 								Surprisingly, features that I expected to be most useful such as Experience Per Minute (XPM) and the range of GPM for each team only confused the models.
 								In fact, in the logistic regression model, these features had the oppisite effect as to what I would expect: an increase in XPM would lead to a slight decrease in win probability.<span class="image left"><img src="images/top-two-elo.jpeg" alt="Elo graphs of the top two teams" /></span><br><br>

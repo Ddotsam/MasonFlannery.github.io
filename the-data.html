@@ -32,7 +32,7 @@
 							<li><a href="about.html">About Me</a></li>
 						</ul>
 						<ul class="icons">
-							<li><a href="#" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							<li><a href="https://www.linkedin.com/in/mason-flannery/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
 							<li><a href="https://github.com/ddotsam" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
 						</ul>
 					</nav>
@@ -103,7 +103,7 @@
 							<p>
 								<span class="image right"><img src="images/DPC.jpg" alt="Logo for the Dota Pro Circuit" /></span>
 								Individual player statistcs were gathered from Dotabuff. 
-								This includes features such as gold earned per minute (GPM) and experience earned per minute (XPM) for all 5 player on the team, and the GPM, XPM, and last hit number for the position 1 and position 5 players on every team.
+								This includes features such as gold earned per minute (GPM) and experience earned per minute (XPM) for all 5 players on the team, and the GPM, XPM, and last hit number for the position 1 and position 5 players on every team.
 							</p>
 
 							<h3>Team and Match Statistics</h3>
@@ -125,7 +125,7 @@
 								On the other hand, team statistics were approximately normal, as you can see in the histograms below. <br>
 								<span class="image"><img src="images/gpm-hists.jpeg" alt="" /></span><br>
 								Upon further consideration, this is exactly what one would expect! 
-								The two roles in the game correspond directly two the bi-modal nature of the individual player statistcs.
+								The two roles in the game correspond directly to the bi-modal nature of the individual player statistcs.
 								Also, as the team statistics are the summation of a random variable, they are susceptable to the central limit theorem. 
 							</p>
 
@@ -145,9 +145,9 @@
 								All sources I could find simply aggregated lifetime statistics for each team and player, which would be useless in any type of prediction.
 								For example, lets follow the performance of Team Secrete, a professional team.
 								Last year, Team Secret placed second in TI, winning several hundred thousands of dollars.
-								However, this year, due to some roster changes, the team is struggling to compete in division 2 matches, the lowest division in DPC tournaments.
+								However, this year, due to some roster changes, the team is struggling to compete in division 2 matches, the lowest skill division in DPC tournaments.
 								Many teams undergo similar changes every year, if not more often.
-								I suspect that this is the reason there has not been a proper treatment on this problem despite the prolific betting scene for professional matches: as soon as I realized I would have to gather all of the data from scratch, I understood that this was a much more difficult undertaking that I origionally assumed.
+								I suspect that this is the reason there has not been a proper treatment on this problem despite the prolific betting scene for professional matches: as soon as I realized I would have to gather all of the data from scratch, I understood that this was a much more difficult undertaking than I originally assumed.
 								I corrected for this by creating all of the team statistics based on aggregated values of the players currently playing for the team.
 							</p>
 
@@ -155,7 +155,7 @@
 								Data Inaccuracies/Irrelevancies
 							</h3>
 							<p>
-								Much of the data widly avalable through API's, including OpenDota, was completely innacurate.
+								Much of the data widly avalable through API's, including OpenDota, was completely inaccurate.
 								After cross checking the data from OpenDota, I discovered that all of the information on team rosters, team Elo scores, and player statistics was wrong.
 								I corrected for this by including information from Dotabuff, as discussed earlier.
 								Also, I corrected for the Elo inaccuracies by customizing my own Elo rankings through modification of the k-parameter and the win/loss outcome mappings.
