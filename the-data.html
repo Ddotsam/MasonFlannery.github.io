@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Everything About the Data</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">Home</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Project Overview</a></li>
+							<li class="active"><a href="the-data.html">The Data</a></li>
+							<li><a href="model-development.html">Model Development and Insights</a></li>
+							<li><a href="results.html">Results and Insights</a></li>
+							<li><a href="about.html">About Me</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="#" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							<li><a href="https://github.com/ddotsam" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+				<div id="main">
+
+					<!-- Body -->
+
+
+					<!-- Post -->
+						<section class="post">
+							<header class="major">
+								<h1>Everything about The Data</h1>
+							</header>
+							<h2>Summary</h2>
+							<p>
+								Unforunantly, there is no widly available database for this kind of project. 
+								There are, however, various websites and API's that contained statistics sufficient for the project. 
+								Using multiple sources, I created an accurate database with nearly all the statistics available on teams and players in general.
+								I also created a custom power ranking system using the Elo algorithm since everything I could find on the subject was innacurate for reasons that will be discussed later.
+								After collecting the data, I explored it using statistical graphs.
+								Then, I decided which features I wanted to use to build the models.
+								Finally, I normalized all the relevant features so that they would be more useful in logistic regression output.
+							</p>
+							<h2>
+								Data Collection
+							</h2>
+							<p>
+								Nearly all of the data comes from one of two soures: Dotabuff or OpenDota API. 
+								If I discovered that some of the data was wrong, I would get the correct data from various sources that are unlisted.
+							</p>
+
+							<h3>
+								Dotabuff
+							</h3>
+							<p>
+								<span class="image left"><img src="images/dotabuff.jpg" alt="Logo for the Dota Pro Circuit" /></span>
+								Much of the individual player data came from a Dota 2 statistical website called Dotabuff.
+								It contains statistical data regarding teams, players, and individual matches.
+								There is no Dotabuff API, so I utilized webscraping to gather information from this resource.
+								Luckily, nearly all of the information available on Dotabuff proved to be accurate.
+								Thus, whenever, the other sources of information were discovered wrong, I would generally turn to Dotabuff for the correct answer.
+							</p>
+
+							<h3>
+								OpenDota API
+							</h3>
+							<p>
+								OpenDota is a REST API that provides free data related to many aspects of Dota 2.
+								I primarly used it for finding match data as much of the data available was innacurate.
+							</p>
+							<!--Problems:
+							Very few relialbe sources.
+							I wanted data that was recent because the teams change so often -->
+							<h2>
+								Dataset Description
+							</h2>
+							<p>
+								The dataset comprises a collection of professional Dota 2 matches, with each match represented as a separate observation. 
+								As Dota is a team game, most of the data actually used for building the models deals exclusively with performance of the team.
+								However, there was no reliable source for the team statistics, so I built all of the team statistics using my own methods.
+							</p>
+
+							<h3>
+								Player Statistics
+							</h3>
+							<p>
+								<span class="image right"><img src="images/DPC.jpg" alt="Logo for the Dota Pro Circuit" /></span>
+								Individual player statistcs were gathered from Dotabuff. 
+								This includes features such as gold earned per minute (GPM) and experience earned per minute (XPM) for all 5 player on the team, and the GPM, XPM, and last hit number for the position 1 and position 5 players on every team.
+							</p>
+
+							<h3>Team and Match Statistics</h3>
+							<p>
+								I included only matches from the Dota Pro Circuit (DPC), a professional esports tournament system for qualifying for the world championship: The International (TI).
+								Reasoning behind this decision and many others will be included in the <a href="challenges">Challenges and Limitations</a> section.
+								Using the individual player statistics, I was able to group all the data into team statistics.
+								These team statistics were calculated as the summation of the respective statistic across each of the 5 players.
+								Match statistics include categorical variables such as division type and the game version that the match was played on.
+							</p>
+
+
+							<h3>
+								Exploratory Data Analysis
+							</h3>
+							<p>
+								Before I began feeding the factors into the algorithms, I wanted to examine the variables to take note of any trends.
+								One important observation of which to take note is that player statistics were generally skewed and bi-modal. 
+								On the other hand, team statistics were approximately normal, as you can see in the histograms below. <br>
+								<span class="image"><img src="images/gpm-hists.jpeg" alt="" /></span><br>
+								Upon further consideration, this is exactly what one would expect! 
+								The two roles in the game correspond directly two the bi-modal nature of the individual player statistcs.
+								Also, as the team statistics are the summation of a random variable, they are susceptable to the central limit theorem. 
+							</p>
+
+							<h2 id="challenges">
+								Challenges and Limitations
+							</h2>
+
+							<h3>
+								Team/Game Volatility
+							</h3>
+							<p>
+								As mentioned before, I only included matches that occured in the DPC.
+								Even though this limited my dataset from tens of thousands of matches to thousands, I felt this was necessary because every DPC tournament has a prize pool of at least $75,000, and I wanted to only include matches where the players would try as hard as they could.
+								This also affected the Elo algorithm that I implemented as it helped control for variation corrected for in other power ranking systems such as Glicko or Glicko-2, the latter being what Valve currently uses to rank players.
+								Additionally, unlike sports like baseball or basketball, Dota 2 goes through regular updates and rule changes, and the teams go through impactful roster changes. 
+								<span class="image right"><img src="images/team-secret.jpg" alt="" /></span>
+								All sources I could find simply aggregated lifetime statistics for each team and player, which would be useless in any type of prediction.
+								For example, lets follow the performance of Team Secrete, a professional team.
+								Last year, Team Secret placed second in TI, winning several hundred thousands of dollars.
+								However, this year, due to some roster changes, the team is struggling to compete in division 2 matches, the lowest division in DPC tournaments.
+								Many teams undergo similar changes every year, if not more often.
+								I suspect that this is the reason there has not been a proper treatment on this problem despite the prolific betting scene for professional matches: as soon as I realized I would have to gather all of the data from scratch, I understood that this was a much more difficult undertaking that I origionally assumed.
+								I corrected for this by creating all of the team statistics based on aggregated values of the players currently playing for the team.
+							</p>
+
+							<h3>
+								Data Inaccuracies/Irrelevancies
+							</h3>
+							<p>
+								Much of the data widly avalable through API's, including OpenDota, was completely innacurate.
+								After cross checking the data from OpenDota, I discovered that all of the information on team rosters, team Elo scores, and player statistics was wrong.
+								I corrected for this by including information from Dotabuff, as discussed earlier.
+								Also, I corrected for the Elo inaccuracies by customizing my own Elo rankings through modification of the k-parameter and the win/loss outcome mappings.
+							</p>
+						</section>
+
+				</div>
+				<!-- Footer -->
+				<footer id="footer">
+					<section class="split contact">
+						<section class="alt">
+							<h3>Address</h3>
+							<p>1732 North 450 West #106<br />
+							Provo, Utah 84604</p>
+						</section>
+						<section>
+							<h3>Phone</h3>
+							<p>(385) 208-6549</p>
+						</section>
+						<section>
+							<h3>Email</h3>
+							<p><a href="mailto:ddotsam@gmail.com">ddotsam@gmail.com</a></p>
+						</section>
+						<section>
+							<h3>Social</h3>
+							<ul class="icons alt">
+								<li><a href="https://www.linkedin.com/in/mason-flannery/" class="icon brands alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+								<li><a href="https://github.com/ddotsam" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+							</ul>
+						</section>
+					</section>
+				</footer>
+
+			<!-- Copyright -->
+				<div id="copyright">
+					<ul><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+				</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

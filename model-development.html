@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Making the Models</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">Home</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Project Overview</a></li>
+							<li><a href="the-data.html">The Data</a></li>
+							<li class="active"><a href="model-development.html">Model Development and Insights</a></li>
+							<li><a href="results.html">Results and Insights</a></li>
+							<li><a href="about.html">About Me</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="#" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							<li><a href="https://github.com/ddotsam" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+				<div id="main">
+
+					<!-- Body -->
+
+
+					<!-- Post -->
+						<section class="post">
+							<header class="major">
+								<h1>
+									Making the Models
+								</h1>
+							</header>
+
+							<h2>
+								Model Selection
+							</h2>
+							<p>
+								Before diving into the specific models, it is crucial to discuss the rationale behind the model selection process. 
+								Multiple machine learning algorithms were considered, including logistic regression, random forests, k-NN, and gradient boosting methods.
+								After careful evaluation and experimentation, two primary models were chosen: XGBoost and Stan's Bayesian logistic regression.
+								Logistic regression was chosen because it can clearly tell which features are the most pertinent, and EDA revealed that the features fit the assumptions.
+								XGBoost was chosen because it is a generally powerful binary classification algorithm.
+								<span class="image right"><img src="images/XGB-feat-importance.jpeg" alt="Feature Importance graph for the XGBoost model" /></span>
+							</p>
+
+							<h2>
+								Feature Selection
+							</h2>
+							<p>
+								Selecting appropriate features is crucial for building effective predictive models. 
+								In this project, a combination of domain knowledge and data exploration techniques such as step-wise selection guided the selection of features.
+								The following features were included in the models:
+								<ul>
+									<li><b>Radiant Team GPM:</b> The average Gold Per Minute (GPM) of the Radiant team.</li>
+									<li><b>Radiant Elo:</b> The Elo rating of the Radiant team, representing their skill level.</li>
+									<li><b>Dire Team GPM:</b> The average GPM of the Dire team.</li>
+									<li><b>Dire Elo:</b> The Elo rating of the Dire team.</li>
+									<li><b>Tournament Type:</b> A categorical feature indicating the type of tournament (e.g., Major/Division 1, Division 2, Qualifier). 
+										This feature was encoded using dummy variables to capture its effects in the models.</li>
+								</ul>
+								Each of the quantitative features were scaled according do their mean and standard deviation. 
+								Upon further consideration, these features make sense considering that the Elo is a measure of the skill of each team, and the GPM is a measure of how the team gains advantages.
+								Surprisingly, features that I expected to be most useful such as Experience Per Minute (XPM) and the range of GPM for each team only confused the models.
+								In fact, in the logistic regression model, these features had the oppisite effect as to what I would expect: an increase in XPM would lead to a slight decrease in win probability.<span class="image left"><img src="images/top-two-elo.jpeg" alt="Elo graphs of the top two teams" /></span><br><br>
+								
+								In the end, after experimenting with the various features, I selected these 5 because they lead to the models with the lowest LOOIC (the leave-one-out cross-validation (LOO) information criterion) for logistic regression. 
+							</p>
+							<h2>
+								Model Comparisons and Insights
+							</h2>
+							<p>
+								Both the XGBoost and logistic regression models provided interesting insights into the game such as:
+								<ul>
+									<li>
+										The importance of GPM in determining match outcomes
+										<ul>
+											<li>
+												While this point might be obvious to anyone with game experience, I did not expect it to be far more important than XPM since XPM seems to be a better indicator of advantage in my games.
+											</li>
+											<li>
+												The GPM of the position 1 player, the GPM of the position 5 player, and the range between the two were all terrible predictors, showing the importance of team success as opposed to individual success.
+												<span class="image right"><img src="images/dota-gold.jpg" alt="Gold Icon in Dota" /></span>
+												This also came as a surprise because the GPM of position 1 players is paramount in my games: it seems like if the carry gets an early gold advantage, the other team has no chance of winning.
+												However, the models would suggest that the wealth of the team is more important than that of the carry.
+											</li>
+										</ul>
+									</li>
+									<li>
+										The varying effects of different tournament types on match outcomes, with qualifiers exhibiting higher variance and major tournaments showcasing lower variance.
+										<ul>
+											<li>
+												As expected, the model is less certain about matches that occur in qualifier rounds compared to division 1 rounds.
+												This is because the breadth of skill in qualifiers is greater: everyone from the first team to be kicked out to the eventual TI winner must play in the qualifiers.
+											</li>
+											<li>
+												As the general skill increased, both of the models tended to favor Dire over Radiant.
+												In fact, when it comes to division 1 and major tournaments, the models generally predict a Dire win unless the Elo and GPM difference significantly favor the Radiant. 
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</p>
+						</section>
+
+				</div>
+				<!-- Footer -->
+				<footer id="footer">
+					<section class="split contact">
+						<section class="alt">
+							<h3>Address</h3>
+							<p>1732 North 450 West #106<br />
+							Provo, Utah 84604</p>
+						</section>
+						<section>
+							<h3>Phone</h3>
+							<p>(385) 208-6549</p>
+						</section>
+						<section>
+							<h3>Email</h3>
+							<p><a href="mailto:ddotsam@gmail.com">ddotsam@gmail.com</a></p>
+						</section>
+						<section>
+							<h3>Social</h3>
+							<ul class="icons alt">
+								<li><a href="https://www.linkedin.com/in/mason-flannery/" class="icon brands alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+								<li><a href="https://github.com/ddotsam" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+							</ul>
+						</section>
+					</section>
+				</footer>
+
+			<!-- Copyright -->
+				<div id="copyright">
+					<ul><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+				</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
