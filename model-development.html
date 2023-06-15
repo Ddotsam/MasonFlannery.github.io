@@ -28,7 +28,7 @@
 							<li><a href="index.html">Project Overview</a></li>
 							<li><a href="the-data.html">The Data</a></li>
 							<li class="active"><a href="model-development.html">Model Development and Insights</a></li>
-							<li><a href="results.html">Results and Insights</a></li>
+							<li><a href="results.html">Results</a></li>
 							<li><a href="about.html">About Me</a></li>
 						</ul>
 						<ul class="icons">
@@ -55,11 +55,11 @@
 								Model Selection
 							</h2>
 							<p>
-								Before diving into the specific models, it is crucial to discuss the rationale behind the model selection process. 
-								Multiple machine learning algorithms were considered, including logistic regression, random forests, k-NN, and gradient boosting methods.
+								Before discussing the models I ended up using, it is crucial to discuss the rationale behind the model selection process. 
+								Several machine learning algorithms were considered, including logistic regression, random forests, k-NN, and gradient boosting methods.
 								After careful evaluation and experimentation, two primary models were chosen: XGBoost and Stan's Bayesian logistic regression.
-								Logistic regression was chosen because it can clearly tell which features are the most pertinent, and EDA revealed that the features fit the assumptions.
-								XGBoost was chosen because it is a generally powerful binary classification algorithm.
+								Logistic regression was chosen for its ability to identify pertinent features clearly, and EDA revealed that the features met the assumptions.
+								XGBoost was selected as a generally powerful binary classification algorithm, offering strong predictive capabilities.
 								<span class="image right"><img src="images/XGB-feat-importance.jpeg" alt="Feature Importance graph for the XGBoost model" /></span>
 							</p>
 
@@ -68,7 +68,7 @@
 							</h2>
 							<p>
 								Selecting appropriate features is crucial for building effective predictive models. 
-								In this project, a combination of domain knowledge and data exploration techniques such as step-wise selection guided the selection of features.
+								In this project, a combination of domain knowledge and data exploration techniques, such as stepwise feature implementation, guided the feature selection process.
 								The following features were included in the models:
 								<ul>
 									<li><b>Radiant Team GPM:</b> The average Gold Per Minute (GPM) of the Radiant team.</li>
@@ -78,25 +78,22 @@
 									<li><b>Tournament Type:</b> A categorical feature indicating the type of tournament (e.g., Major/Division 1, Division 2, Qualifier). 
 										This feature was encoded using dummy variables to capture its effects in the models.</li>
 								</ul>
-								Each of the quantitative features were normalized according to their mean and standard deviation. 
-								Upon further consideration, these features make sense considering that the Elo is a measure of the skill of each team, and the GPM is a measure of how the team gains advantages.
-								Surprisingly, features that I expected to be most useful such as Experience Per Minute (XPM) and the range of GPM for each team only confused the models.
-								In fact, in the logistic regression model, these features had the oppisite effect as to what I would expect: an increase in XPM would lead to a slight decrease in win probability.<span class="image left"><img src="images/top-two-elo.jpeg" alt="Elo graphs of the top two teams" /></span><br><br>
+								Each of the quantitative features was normalized based on their mean and standard deviation. 
+								These features make sense because Elo is a measure of the skill of each team, and GPM is a measure of how the team gains advantages.
+								Interestingly, features that were initially expected to be useful, such as Experience Per Minute (XPM) and the range of GPM for each team, turned out to confuse the models.
+								In fact, in the logistic regression model, these features had the opposite effect, with an increase in XPM leading to a slight decrease in win probability.<span class="image left"><img src="images/top-two-elo.jpeg" alt="Elo graphs of the top two teams" /></span><br><br>
 								
-								In the end, after experimenting with the various features, I selected these 5 because they lead to the models with the lowest LOOIC (the leave-one-out cross-validation (LOO) information criterion) for logistic regression. 
+								After experimenting with various features, these five were chosen as they resulted in the models with the lowest LOOIC (leave-one-out cross-validation information criterion) for logistic regression. 
 							</p>
 							<h2>
 								Model Comparisons and Insights
 							</h2>
 							<p>
-								Both the XGBoost and logistic regression models provided interesting insights into the game such as:
+								Both the XGBoost and logistic regression models provided interesting insights into the game including:
 								<ul>
 									<li>
-										The importance of GPM in determining match outcomes
+										The importance of GPM in determining match outcomes, which turned out to be more significant than XPM, contrary to initial expectations.
 										<ul>
-											<li>
-												While this point might be obvious to anyone with game experience, I did not expect it to be far more important than XPM since XPM seems to be a better indicator of advantage in my games.
-											</li>
 											<li>
 												The GPM of the position 1 player, the GPM of the position 5 player, and the range between the two were all terrible predictors, showing the importance of team success as opposed to individual success.
 												<span class="image right"><img src="images/dota-gold.jpg" alt="Gold Icon in Dota" /></span>
@@ -119,6 +116,7 @@
 										</ul>
 									</li>
 								</ul>
+								By incorporating these findings, the models provide valuable insights for match prediction and analysis.
 							</p>
 						</section>
 

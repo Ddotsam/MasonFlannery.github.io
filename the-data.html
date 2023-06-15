@@ -28,7 +28,7 @@
 							<li><a href="index.html">Project Overview</a></li>
 							<li class="active"><a href="the-data.html">The Data</a></li>
 							<li><a href="model-development.html">Model Development and Insights</a></li>
-							<li><a href="results.html">Results and Insights</a></li>
+							<li><a href="results.html">Results</a></li>
 							<li><a href="about.html">About Me</a></li>
 						</ul>
 						<ul class="icons">
@@ -50,10 +50,10 @@
 							</header>
 							<h2>Summary</h2>
 							<p>
-								Unforunantly, there is no widly available database for this kind of project. 
-								There are, however, various websites and API's that contained statistics sufficient for the project. 
-								Using multiple sources, I created an accurate database with nearly all the statistics available on teams and players in general.
-								I also created a custom power ranking system using the Elo algorithm since everything I could find on the subject was innacurate for reasons that will be discussed later.
+								Unfortunately, there is no widely available database for this kind of project. 
+								There are, however, various websites and API's that contain statistics sufficient for the project. 
+								Using multiple sources, primarily those listed below, I created an accurate database with nearly all the statistics available on teams and players in general.
+								I also created a custom power ranking system using the Elo algorithm since everything I could find on the subject was inaccurate for reasons that will be discussed later.
 								After collecting the data, I explored it using statistical graphs.
 								Then, I decided which features I wanted to use to build the models.
 								Finally, I normalized all the relevant features so that they would be more useful in logistic regression output.
@@ -62,8 +62,8 @@
 								Data Collection
 							</h2>
 							<p>
-								Nearly all of the data comes from one of two soures: Dotabuff or OpenDota API. 
-								If I discovered that some of the data was wrong, I would get the correct data from various sources that are unlisted.
+								Nearly all of the data comes from one of two sources: Dotabuff or OpenDota API. 
+								If I discovered that some of the data was wrong, I would get the correct data from various sources that are unlisted such as official team pages or betting websites.
 							</p>
 
 							<h3>
@@ -73,9 +73,9 @@
 								<span class="image left"><img src="images/dotabuff.jpg" alt="Logo for the Dota Pro Circuit" /></span>
 								Much of the individual player data came from a Dota 2 statistical website called Dotabuff.
 								It contains statistical data regarding teams, players, and individual matches.
-								There is no Dotabuff API, so I utilized webscraping to gather information from this resource.
-								Luckily, nearly all of the information available on Dotabuff proved to be accurate.
-								Thus, whenever, the other sources of information were discovered wrong, I would generally turn to Dotabuff for the correct answer.
+								There is no Dotabuff API, so I utilized web scraping to gather information from this resource.
+								Luckily, nearly all of the information available on Dotabuff proved to be accurate when cross referencing it with actual game data and official team websites.
+								Thus, whenever the other sources of information were discovered wrong, I would generally turn to Dotabuff for the correct answer.
 							</p>
 
 							<h3>
@@ -83,7 +83,7 @@
 							</h3>
 							<p>
 								OpenDota is a REST API that provides free data related to many aspects of Dota 2.
-								I primarly used it for finding match data as much of the data available was innacurate.
+								I primarily used it for finding match data as much of the data available was inaccurate.
 							</p>
 							<!--Problems:
 							Very few relialbe sources.
@@ -92,7 +92,8 @@
 								Dataset Description
 							</h2>
 							<p>
-								The dataset comprises a collection of professional Dota 2 matches, with each match represented as a separate observation. 
+								In the end, the dataset is a collection of data frames, the largest comprising more than 2700 observations of 48 variables. 
+								Variables include match information and the participating team statistics, with each match represented as a separate observation. 
 								As Dota is a team game, most of the data actually used for building the models deals exclusively with performance of the team.
 								However, there was no reliable source for the team statistics, so I built all of the team statistics using my own methods.
 							</p>
@@ -102,7 +103,7 @@
 							</h3>
 							<p>
 								<span class="image right"><img src="images/DPC.jpg" alt="Logo for the Dota Pro Circuit" /></span>
-								Individual player statistcs were gathered from Dotabuff. 
+								Individual player statistics were gathered from Dotabuff. 
 								This includes features such as gold earned per minute (GPM) and experience earned per minute (XPM) for all 5 players on the team, and the GPM, XPM, and last hit number for the position 1 and position 5 players on every team.
 							</p>
 
@@ -125,8 +126,8 @@
 								On the other hand, team statistics were approximately normal, as you can see in the histograms below. <br>
 								<span class="image"><img src="images/gpm-hists.jpeg" alt="" /></span><br>
 								Upon further consideration, this is exactly what one would expect! 
-								The two roles in the game correspond directly to the bi-modal nature of the individual player statistcs.
-								Also, as the team statistics are the summation of a random variable, they are susceptable to the central limit theorem. 
+								The two roles in the game correspond directly to the bi-modal nature of the individual player statistics.
+								Also, as the team statistics are the summation of a random variable, they are susceptible to the central limit theorem. 
 							</p>
 
 							<h2 id="challenges">
@@ -137,27 +138,32 @@
 								Team/Game Volatility
 							</h3>
 							<p>
-								As mentioned before, I only included matches that occured in the DPC.
-								Even though this limited my dataset from tens of thousands of matches to thousands, I felt this was necessary because every DPC tournament has a prize pool of at least $75,000, and I wanted to only include matches where the players would try as hard as they could.
-								This also affected the Elo algorithm that I implemented as it helped control for variation corrected for in other power ranking systems such as Glicko or Glicko-2, the latter being what Valve currently uses to rank players.
-								Additionally, unlike sports like baseball or basketball, Dota 2 goes through regular updates and rule changes, and the teams go through impactful roster changes. 
 								<span class="image right"><img src="images/team-secret.jpg" alt="" /></span>
-								All sources I could find simply aggregated lifetime statistics for each team and player, which would be useless in any type of prediction.
-								For example, lets follow the performance of Team Secrete, a professional team.
-								Last year, Team Secret placed second in TI, winning several hundred thousands of dollars.
-								However, this year, due to some roster changes, the team is struggling to compete in division 2 matches, the lowest skill division in DPC tournaments.
-								Many teams undergo similar changes every year, if not more often.
-								I suspect that this is the reason there has not been a proper treatment on this problem despite the prolific betting scene for professional matches: as soon as I realized I would have to gather all of the data from scratch, I understood that this was a much more difficult undertaking than I originally assumed.
-								I corrected for this by creating all of the team statistics based on aggregated values of the players currently playing for the team.
+								As mentioned earlier, I chose to include only matches that occurred in the DPC.
+								While this decision reduced the size of my dataset, I deemed it necessary because every DPC tournament boasts a minimum prize pool of $75,000, ensuring that the included matches would feature players giving their utmost effort.
+								This selection also influenced the implementation of the Elo algorithm, which helped account for variations not adequately addressed in other power ranking systems like Glicko or Glicko-2, with the latter currently employed by Valve for player rankings.
+								Furthermore, unlike sports such as baseball or basketball, Dota 2 undergoes regular updates, rule changes, and impactful roster transitions for teams.
+								All the data sources I could find simply aggregated lifetime statistics for each team and player, which are useless for predicting outcomes in modern games..
+								Let's consider the performance of Team Secret, a professional team, as an example.
+								Last year, Team Secret achieved an impressive second place in TI, earning $2.5 million.
+								However, this year, the team is struggling to compete in the lowest skill brackets of DPC tournaments.
+								<span class="image left"><img src="images/elo-by-gpm.jpeg" alt="" /></span>
+								The reason for this decline is that all but one member from last year's roster were replaced with new players.
+								It's not uncommon for many teams to undergo similar changes every year, if not more frequently.
+								This constant flux in team compositions poses a significant challenge for accurate predictions, despite the thriving betting scene surrounding professional matches.
+								With the widely available data being historically biased, the accuracy of game prediction for current matches is greatly reduced.
+								To address this issue, I created team statistics based on aggregated values of the players currently playing for each team.
 							</p>
 
 							<h3>
 								Data Inaccuracies/Irrelevancies
 							</h3>
 							<p>
-								Much of the data widly avalable through API's, including OpenDota, was completely inaccurate.
+								Much of the data widely available through API's, including OpenDota, was completely inaccurate.
+								For example, the OpenDota API failed to correctly list the active team members on most teams, sometimes claiming a team had as much as 15 active players.
 								After cross checking the data from OpenDota, I discovered that all of the information on team rosters, team Elo scores, and player statistics was wrong.
-								I corrected for this by including information from Dotabuff, as discussed earlier.
+								Similar problems were faced with other API's and resources that I tested.
+								I addressed this issue by including information from Dotabuff, as discussed earlier.
 								Also, I corrected for the Elo inaccuracies by customizing my own Elo rankings through modification of the k-parameter and the win/loss outcome mappings.
 							</p>
 						</section>
