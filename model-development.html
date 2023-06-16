@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Making the Models</title>
+		<title>Making and Testing the Models</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -27,8 +27,8 @@
 						<ul class="links">
 							<li><a href="index.html">Project Overview</a></li>
 							<li><a href="the-data.html">The Data</a></li>
-							<li class="active"><a href="model-development.html">Model Development and Insights</a></li>
-							<li><a href="results.html">Results</a></li>
+							<li class="active"><a href="model-development.html">The Model</a></li>
+							<li><a href="other-projects.html">Other Projects</a></li>
 							<li><a href="about.html">About Me</a></li>
 						</ul>
 						<ul class="icons">
@@ -47,7 +47,7 @@
 						<section class="post">
 							<header class="major">
 								<h1>
-									Making the Models
+									Making and Testing <br>the Models
 								</h1>
 							</header>
 
@@ -80,25 +80,28 @@
 								</ul>
 								Each of the quantitative features was normalized based on their mean and standard deviation. 
 								These features make sense because Elo is a measure of the skill of each team, and GPM is a measure of how the team gains advantages.
+								<span class="image left"><img src="images/top-two-elo.jpeg" alt="Elo graphs of the top two teams" /></span>
 								Interestingly, features that were initially expected to be useful, such as Experience Per Minute (XPM) and the range of GPM for each team, turned out to confuse the models.
-								In fact, in the logistic regression model, these features had the opposite effect, with an increase in XPM leading to a slight decrease in win probability.<span class="image left"><img src="images/top-two-elo.jpeg" alt="Elo graphs of the top two teams" /></span><br><br>
-								
+								In fact, in the logistic regression model, these features had the opposite effect, with an increase in XPM leading to a slight decrease in win probability.
 								After experimenting with various features, these five were chosen as they resulted in the models with the lowest LOOIC (leave-one-out cross-validation information criterion) for logistic regression. 
 							</p>
 							<h2>
 								Model Comparisons and Insights
 							</h2>
 							<p>
-								Both the XGBoost and logistic regression models provided interesting insights into the game including:
+								Both the XGBoost and logistic regression models provided interesting insights into the game including those discussed below:
 								<ul>
 									<li>
-										The importance of GPM in determining match outcomes, which turned out to be more significant than XPM, contrary to initial expectations.
+										The importance of GPM in determining match outcomes, which turned out to be far more insightful than XPM, contrary to initial expectations.
 										<ul>
 											<li>
 												The GPM of the position 1 player, the GPM of the position 5 player, and the range between the two were all terrible predictors, showing the importance of team success as opposed to individual success.
 												<span class="image right"><img src="images/dota-gold.jpg" alt="Gold Icon in Dota" /></span>
 												This also came as a surprise because the GPM of position 1 players is paramount in my games: it seems like if the carry gets an early gold advantage, the other team has no chance of winning.
 												However, the models would suggest that the wealth of the team is more important than that of the carry.
+											</li>
+											<li>
+												Interestingly, the XPM of a team often yielded a negative coefficient: an increase in XPM lead to a decrease in win probability across all divisions.
 											</li>
 										</ul>
 									</li>
@@ -110,13 +113,27 @@
 												This is because the breadth of skill in qualifiers is greater: everyone from the first team to be kicked out to the eventual TI winner must play in the qualifiers.
 											</li>
 											<li>
-												As the general skill increased, both of the models tended to favor Dire over Radiant.
-												In fact, when it comes to division 1 and major tournaments, the models generally predict a Dire win unless the Elo and GPM difference significantly favor the Radiant. 
+												As the division and general skill increased, both of the models tended to favor Dire over Radiant.
+												In fact, when it comes to division 1 and major tournaments, the models generally predict a Dire win unless the Elo and GPM difference significantly favor the Radiant, showing a gameplay bias for the Dire side of the map. 
 											</li>
 										</ul>
 									</li>
 								</ul>
 								By incorporating these findings, the models provide valuable insights for match prediction and analysis.
+							</p>
+							<h2>
+								Results
+							</h2>
+							<p>
+								Since the Elo for each team is updated at the end of every match, splitting the dataset into a train and test set would lead to data leakage. 
+								This is because the model would attempt to predict the result of a game based on the teams' Elos, but those Elos already contain information on which team won the game since that game was considered in the calculation of the Elo.
+								Thus, I felt it would be inappropriate to perform a train/test split for this dataset. 
+								<span class="image left"><img src="images/bali-major.jpg" alt="Gold Icon in Dota" /></span>
+							</p>
+							<p>
+								I will be testing the model's performance on the matches that occur during the Bali Major, which will take place from June 29th to July 9th.
+								This is a prestigous tournament with a total prize pool of $500,000.
+								Winning games in this tournamnt contribute significantly towards a team's qualification for TI, so competition will be fierce.
 							</p>
 						</section>
 
