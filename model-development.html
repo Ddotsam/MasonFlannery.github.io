@@ -56,11 +56,12 @@
 							</h2>
 							<p>
 								Before discussing the models I ended up using, it is crucial to discuss the rationale behind the model selection process. 
-								Several machine learning algorithms were considered, including logistic regression, random forests, k-NN, and gradient boosting methods.
-								After careful evaluation and experimentation, two primary models were chosen: XGBoost and Stan's Bayesian logistic regression.
-								Logistic regression was chosen for its ability to identify pertinent features clearly, and EDA revealed that the features met the assumptions.
-								XGBoost was selected as a generally powerful binary classification algorithm, offering strong predictive capabilities.
-								<span class="image right"><img src="images/XGB-feat-importance.jpeg" alt="Feature Importance graph for the XGBoost model" /></span>
+								Several machine learning algorithms were considered, including logistic regression, random forests, k-nearest neighbors, support vector machines, naive bayes, and extreme gradient boosting.
+								After careful evaluation and experimentation, two primary models were chosen: random forest and Stan's Bayesian logistic regression.
+								Logistic regression was chosen for its ability to clearly identify pertinent features, and EDA revealed that the features met the assumptions.
+								Logistic regression aided the feature selection process for the other models.
+								Random forest was selected for its impressive out-of-sample testing accuracy when compared to other models.
+								<span class="image right"><img src="images/rf-feat-importance-bar.jpeg" alt="Feature Importance graph for the random forest model" /></span>
 							</p>
 
 							<h2>
@@ -75,46 +76,59 @@
 									<li><b>Radiant Elo:</b> The Elo rating of the Radiant team, representing their skill level.</li>
 									<li><b>Dire Team GPM:</b> The average GPM of the Dire team.</li>
 									<li><b>Dire Elo:</b> The Elo rating of the Dire team.</li>
-									<li><b>Tournament Type:</b> A categorical feature indicating the type of tournament (e.g., Major/Division 1, Division 2, Qualifier). 
-										This feature was encoded using dummy variables to capture its effects in the models.</li>
 								</ul>
 								Each of the quantitative features was normalized based on their mean and standard deviation. 
 								These features make sense because Elo is a measure of the skill of each team, and GPM is a measure of how the team gains advantages.
-								<span class="image left"><img src="images/top-two-elo.jpeg" alt="Elo graphs of the top two teams" /></span>
-								Interestingly, features that were initially expected to be useful, such as Experience Per Minute (XPM) and the range of GPM for each team, turned out to confuse the models.
+								<span class="image left"><img src="images/top-two-elo.jpeg" alt="Elo of the top two teams" /></span>
+								Interestingly, features that were initially expected to be useful, such as Experience Per Minute (XPM), the range of GPM for each team, and the division of tournament, turned out to confuse the models.
 								In fact, in the logistic regression model, these features had the opposite effect, with an increase in XPM leading to a slight decrease in win probability.
-								After experimenting with various features, these five were chosen as they resulted in the models with the lowest LOOIC (leave-one-out cross-validation information criterion) for logistic regression. 
+								After experimenting with many features, these four were chosen as they consistantly created models with better AUC/ROC and out-of-sample-accuracy than any other feature combination. 
 							</p>
 							<h2>
 								Model Comparisons and Insights
 							</h2>
+							<span class="image center">
+								<img src="images/lr-variable-violin-plot.jpeg" alt="Violin plot of the varibales in the Logisitc Regression Model">
+							</span>
 							<p>
-								Both the XGBoost and logistic regression models provided interesting insights into the game including those discussed below:
+								The violin plot displayed above illustrates the variables included in the logistic regression output along with the corresponding density of each variable's simulation.
+								Since the model was predicting whether or not the radiant team would win, positive variable values refer to an increase in the likelihood that radiant would win, and negative values refer to the opposite (that is, negative values show the variable favors the dire side).
+								Insights from the various models will be discussed below.
 								<ul>
 									<li>
-										The importance of GPM in determining match outcomes, which turned out to be far more insightful than XPM, contrary to initial expectations.
+										Negative Intercept
+									</li>
+									<ul>
+										<li>
+											The negative intercept would lead us to believe that dire wins more often than radiant.
+										Dotabuff corroborates this theory by showing that, across the hundres of thousands of professional matches ever played, dire side wins about 62.67% of the time.
+										I guess you'd better hope that your favorite professional team is dire side!
+										Interestingly, in non-professional dota, radiant is slightly favored.
+										<span class="image right"><img src="images/lr-variables-density-plot.jpeg" alt="A stacked density plot of the variables in the logistic regression model"></span>
+										</li>
+									</ul>
+									<li>
+										The importance of Elo
+									</li>
+									<ul>
+										<li>
+											Elo could be considered as a rough measure of the skill of a team, including soft skills like communication, problem-solving, and leadership, among other things. 
+											Elo turned out to be the most important factor in deciding if a team would win, across all skill levels. 
+											Since elo is only an amalgamation of the effect of soft skills of a team, I think that measuring these soft skills more closely would produce a model far more accurate and insightful than mine when predicting game outcome.
+
+										</li>
+									</ul>
+									<li>
+										GPM vs. XPM
 										<ul>
-											<li>
-												The GPM of the position 1 player, the GPM of the position 5 player, and the range between the two were all terrible predictors, showing the importance of team success as opposed to individual success.
-												<span class="image right"><img src="images/dota-gold.jpg" alt="Gold Icon in Dota" /></span>
-												This also came as a surprise because the GPM of position 1 players is paramount in my games: it seems like if the carry gets an early gold advantage, the other team has no chance of winning.
-												However, the models would suggest that the wealth of the team is more important than that of the carry.
-											</li>
 											<li>
 												Interestingly, the XPM of a team often yielded a negative coefficient: an increase in XPM lead to a decrease in win probability across all divisions.
-											</li>
-										</ul>
-									</li>
-									<li>
-										The varying effects of different tournament types on match outcomes, with qualifiers exhibiting higher variance and major tournaments showcasing lower variance.
-										<ul>
-											<li>
-												As expected, the model is less certain about matches that occur in qualifier rounds compared to division 1 rounds.
-												This is because the breadth of skill in qualifiers is greater: everyone from the first team to be kicked out to the eventual TI winner must play in the qualifiers.
+												<span class="image right"><img src="images/dota-gold.jpg" alt="Gold Icon in Dota" /></span>
 											</li>
 											<li>
-												As the division and general skill increased, both of the models tended to favor Dire over Radiant.
-												In fact, when it comes to division 1 and major tournaments, the models generally predict a Dire win unless the Elo and GPM difference significantly favor the Radiant, showing a gameplay bias for the Dire side of the map. 
+												The GPM of the position 1 player, the GPM of the position 5 player, and the range between the two were all terrible predictors, showing the importance of team success as opposed to individual success.
+												This also came as a surprise because the GPM of position 1 players is paramount in my games: it seems like if the carry gets an early gold advantage, the other team has no chance of winning.
+												However, the models would suggest that the wealth of the team is more important than that of the carry.
 											</li>
 										</ul>
 									</li>
@@ -125,15 +139,18 @@
 								Results
 							</h2>
 							<p>
-								Since the Elo for each team is updated at the end of every match, splitting the dataset into a train and test set would lead to data leakage. 
-								This is because the model would attempt to predict the result of a game based on the teams' Elos, but those Elos already contain information on which team won the game since that game was considered in the calculation of the Elo.
-								Thus, I felt it would be inappropriate to perform a train/test split for this dataset. 
+								To avoid data leakage, the model's accuracy was evaluated using out-of-sample games from the prestigious Bali Major, a DPC tournament in Indonesia with a $500,000 prize pool.
+								These games were not included in the Elo calculations, ensuring the model's performance on unseen data.
+								This approach provided a reliable evaluation, mitigating bias from using Elo values derived from training games.
+								Considering the Bali Major's substantial prize pool and its impact on qualification for The International (TI), evaluating out-of-sample games further mitigated bias from teams not exerting full effort.
+								This ensured a robust assessment of the model's accuracy in predicting outcomes in competitive Dota 2 events.
 								<span class="image left"><img src="images/bali-major.jpg" alt="Gold Icon in Dota" /></span>
 							</p>
 							<p>
-								I will be testing the model's performance on the matches that occur during the Bali Major, which will take place from June 29th to July 9th.
-								This is a prestigous tournament with a total prize pool of $500,000.
-								Winning games in this tournamnt contribute significantly towards a team's qualification for TI, so competition will be fierce.
+								In the end, the random forest model emerged as the most accurate among the different models evaluated.
+								It successfully predicted the outcomes of <strong>66.50%</strong> of the games at the Bali Major, including correctly identifying the winning team.
+								Looking ahead, there is potential for further improvement by incorporating additional features that capture the nuanced "soft skills" exhibited by teams.
+								I'm confident this would provide a more comprehensive understanding of the factors influencing game outcomes and enhance the predictive power of the model.
 							</p>
 						</section>
 
